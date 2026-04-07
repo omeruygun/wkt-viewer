@@ -137,6 +137,37 @@ const translations = {
         "geomType.MultiLineString": "Çoklu Çizgi",
         "geomType.MultiPolygon": "Çoklu Alan",
         
+        // Tour
+        "tour.helpTooltip": "Yardım turu",
+        "tour.helpShort": "Yardım",
+        "tour.dontShowAgain": "Bu tanıtımı bir daha gösterme",
+        "tour.next": "İleri",
+        "tour.prev": "Geri",
+        "tour.done": "Bitir",
+        "tour.close": "Kapat",
+        "tour.progress": "{current} / {total}",
+        "tour.demoGeometryName": "Ankara (örnek nokta)",
+        "tour.step0.title": "Hoş geldiniz",
+        "tour.step0.body": "Online WKT Viewer ile WKT geometrilerinizi haritada görüntüleyebilir, çizebilir ve dışa aktarabilirsiniz. Önce harita araçları, yakınlaştırma ve paylaşılabilir bağlantı ile altlık katmanı; ardından örnek nokta, sol menü (WKT/Excel), stil penceresi, liste eylemleri ve projeksiyon adımlarını göreceğiz.",
+        "tour.step1.title": "Harita araçları",
+        "tour.step1.body": "Nokta, çizgi ve alan çizmek için bu düğmeleri kullanın. Çizimi durdurmak veya tüm geometrileri temizlemek için yanındaki seçenekler vardır.",
+        "tour.step2.title": "Yakınlaştırma ve paylaşım",
+        "tour.step2.body": "Yakınlaştırma seviyesi burada görünür. Haritayı kaydırdıkça veya zoom yaptıkça adres çubuğundaki bağlantı güncellenir (#@enlem,boylam,zoom). Bağlantıyı kopyalayarak aynı görünümü paylaşabilirsiniz.",
+        "tour.step3.title": "Altlık harita",
+        "tour.step3.body": "Katmanlar simgesiyle OpenStreetMap, uydu veya hibrit altlık haritası seçebilirsiniz.",
+        "tour.step4.title": "Örnek nokta ve liste",
+        "tour.step4.body": "Tur için haritaya örnek bir nokta ekledik: POINT(32.854046 39.920768), kaynak WGS 84 (EPSG:4326). Tur vurgusunda haritadaki nokta kırmızı görünür; sol panelde satır olarak listelenir. Bir sonraki adımda alttaki «WKT Ekle» ve Excel düğmelerini; ardından stil penceresini anlatacağız.",
+        "tour.step5.title": "WKT ve Excel ile veri ekleme",
+        "tour.step5.body": "«WKT Ekle» düğmesi bir pencere açar: WKT metni, kaynak projeksiyon (verinin hangi EPSG’de yazıldığı) ve isteğe bağlı ad. «Ekle» geometriyi haritaya koyar; dönüşüm harita projeksiyonuna (EPSG:3857) notta özetlenir; çoğu kez stil penceresi açılır. «Excel» ile tablodan toplu içe aktarır; üstteki indirme simgesi CSV, JSON veya GeoJSON dışa aktarır. Tur bu adımda yalnızca bu düğmeleri gösterir; WKT penceresini açmaz ve yeni nokta eklemez.",
+        "tour.step6.title": "Stil Düzenle",
+        "tour.step6.body": "Buradan nokta/çizgi/alana dolgu rengi, çizgi kalınlığı, çerçeve ve haritada etiket gösterimini ayarlarsınız. «Geometri Adı» hem listede hem etikette görünür. Turda örnek nokta maviye güncellenmiştir (renk seçicide ve haritada). Değişiklikleri kaydetmek için «Uygula» kullanın; tur sırasında pencere açık kalır.",
+        "tour.step7.title": "Liste satırındaki düğmeler",
+        "tour.step7.body": "Büyüteç (Yakınlaş): geometriyi haritada ortalar. Palet (Stil Düzenle): nokta/çizgi/alan görünümünü ve etiketi düzenlersiniz. Dünya (Projeksiyon): aynı geometrinin farklı koordinat sistemlerindeki WKT karşılıklarını gösteren pencereyi açar. Çöp kutusu (Sil): geometriyi listeden ve haritadan kaldırır (onay istenir).",
+        "tour.step8.title": "Projeksiyon bilgileri ve kopyalama",
+        "tour.step8.body": "Bu pencerede her satır bir projeksiyon (ör. EPSG:4326, Web Mercator, TM zonları) ve o sistemdeki WKT’yi gösterir. Metni panoya almak için satırdaki «Kopyala» düğmesini kullanın. Kapatınca haritaya geri dönersiniz.",
+        "tour.step9.title": "Dil ve yardım",
+        "tour.step9.body": "Dili buradan değiştirebilirsiniz. Bu yardım turuna istediğiniz zaman «Yardım» ile yeniden başlayabilirsiniz.",
+        
         // Language
         "lang.select": "Dil",
         "lang.tr": "Türkçe",
@@ -285,6 +316,37 @@ const translations = {
         "geomType.MultiLineString": "MultiLine",
         "geomType.MultiPolygon": "MultiPolygon",
         
+        // Tour
+        "tour.helpTooltip": "Guided tour",
+        "tour.helpShort": "Help",
+        "tour.dontShowAgain": "Don't show this introduction again",
+        "tour.next": "Next",
+        "tour.prev": "Back",
+        "tour.done": "Done",
+        "tour.close": "Close",
+        "tour.progress": "{current} / {total}",
+        "tour.demoGeometryName": "Ankara (sample point)",
+        "tour.step0.title": "Welcome",
+        "tour.step0.body": "Online WKT Viewer lets you visualize, draw, and export WKT geometries on a map. We cover drawing tools, zoom and shareable links, basemaps, a sample point, the left panel (Add WKT / Excel), the style dialog, row actions, and the projection window.",
+        "tour.step1.title": "Map drawing tools",
+        "tour.step1.body": "Use these buttons to draw points, lines, and polygons. The nearby controls stop drawing or clear all geometries.",
+        "tour.step2.title": "Zoom and sharing",
+        "tour.step2.body": "Current zoom is shown here. As you pan or zoom, the address bar updates (#@latitude,longitude,zoom). Copy the link to share the same map view.",
+        "tour.step3.title": "Basemap",
+        "tour.step3.body": "Open the layers control to switch between OpenStreetMap, satellite, or hybrid basemaps.",
+        "tour.step4.title": "Sample point and list",
+        "tour.step4.body": "We added a demo point: POINT(32.854046 39.920768) in WGS 84 (EPSG:4326). For this tour it is highlighted red on the map and listed in the left panel. Next we point out «Add WKT» and Excel at the bottom, then open the style dialog.",
+        "tour.step5.title": "Add data with WKT or Excel",
+        "tour.step5.body": "«Add WKT» opens a dialog for the WKT text, source projection (which CRS the coordinates are in), and an optional name. «Add» puts the geometry on the map with reprojection toward the map (EPSG:3857), described in the note; the style dialog usually opens next. «Excel» imports many rows from a spreadsheet. The download icon exports to CSV, JSON, or GeoJSON. This tour only highlights these controls—it does not open the WKT dialog or add another point.",
+        "tour.step6.title": "Edit style",
+        "tour.step6.body": "Adjust fill color, stroke, width, and whether the label appears on the map. «Geometry name» is shown in the list and on the label. In this tour the sample point is switched to blue in the picker and on the map. Click «Apply» to save; during the tour the dialog stays open.",
+        "tour.step7.title": "Row actions",
+        "tour.step7.body": "Search icon (Zoom to): centers the map on the feature. Palette (Edit style): opens styling for point, line, or polygon and labels. Globe (Projection): opens the projection dialog with this geometry’s coordinates in several CRS. Trash (Delete): removes it from the list and map (with confirmation).",
+        "tour.step8.title": "Projection information and copy",
+        "tour.step8.body": "Each row shows a coordinate reference system and the geometry’s WKT in that system. Use «Copy» (or the row’s copy control) to put the WKT on the clipboard. Close the dialog to return to the map.",
+        "tour.step9.title": "Language and help",
+        "tour.step9.body": "Change the interface language here. Restart this guided tour anytime with the Help button.",
+        
         // Language
         "lang.select": "Language",
         "lang.tr": "Türkçe",
@@ -425,6 +487,37 @@ const translations = {
         "geomType.MultiPoint": "Multipunkt",
         "geomType.MultiLineString": "Multilinie",
         "geomType.MultiPolygon": "Multipolygon",
+        
+        // Tour
+        "tour.helpTooltip": "Rundgang",
+        "tour.helpShort": "Hilfe",
+        "tour.dontShowAgain": "Diese Einführung nicht mehr anzeigen",
+        "tour.next": "Weiter",
+        "tour.prev": "Zurück",
+        "tour.done": "Fertig",
+        "tour.close": "Schließen",
+        "tour.progress": "{current} / {total}",
+        "tour.demoGeometryName": "Ankara (Beispielpunkt)",
+        "tour.step0.title": "Willkommen",
+        "tour.step0.body": "Mit dem Online WKT Viewer stellen Sie WKT-Geometrien auf der Karte dar, zeichnen und exportieren. Es folgen Zeichenwerkzeuge, Zoom mit Link, Hintergrundkarte, Beispielpunkt, linkes Panel (WKT/Excel), der Stil-Dialog, Zeilenaktionen und der Projektionsdialog.",
+        "tour.step1.title": "Zeichenwerkzeuge",
+        "tour.step1.body": "Hier zeichnen Sie Punkte, Linien und Polygone. Daneben beenden Sie das Zeichnen oder löschen alle Geometrien.",
+        "tour.step2.title": "Zoom und Teilen",
+        "tour.step2.body": "Die Zoomstufe wird hier angezeigt. Beim Verschieben oder Zoomen aktualisiert sich die Adresszeile (#@Breite,Länge,Zoom). Kopieren Sie den Link, um dieselbe Kartenansicht zu teilen.",
+        "tour.step3.title": "Hintergrundkarte",
+        "tour.step3.body": "Über das Ebenen-Symbol wählen Sie OpenStreetMap, Satellit oder Hybrid.",
+        "tour.step4.title": "Beispielpunkt und Liste",
+        "tour.step4.body": "Wir haben einen Demo-Punkt hinzugefügt: POINT(32.854046 39.920768) in WGS 84 (EPSG:4326). In der Tour ist er rot auf der Karte und in der Liste. Als Nächstes zeigen wir «WKT hinzufügen» und Excel unten, danach den Stil-Dialog.",
+        "tour.step5.title": "Daten mit WKT oder Excel",
+        "tour.step5.body": "«WKT hinzufügen» öffnet einen Dialog: WKT-Text, Quellprojektion und optional ein Name. «Hinzufügen» übernimmt die Geometrie auf die Karte (Umwandlung ins Karten-KRS, siehe Hinweis); danach öffnet sich oft der Stil-Dialog. «Excel» importiert viele Zeilen. Über das Download-Symbol exportieren Sie nach CSV, JSON oder GeoJSON. Der Rundgang öffnet den WKT-Dialog hier nicht und fügt keinen zweiten Punkt hinzu.",
+        "tour.step6.title": "Stil bearbeiten",
+        "tour.step6.body": "Hier passen Sie Füllfarbe, Umrandung, Linienstärke und die Anzeige der Beschriftung auf der Karte an. Der Geometriename erscheint in der Liste und in der Beschriftung. In der Tour wird der Beispielpunkt auf Blau umgestellt (Farbwähler und Karte). Mit «Anwenden» speichern Sie; während der Tour bleibt der Dialog geöffnet.",
+        "tour.step7.title": "Aktionen in der Zeile",
+        "tour.step7.body": "Lupe (Zoomen): Karte auf die Geometrie zentrieren. Palette (Stil): Darstellung und Beschriftung bearbeiten. Globus (Projektion): Dialog mit WKT dieser Geometrie in mehreren Koordinatensystemen. Papierkorb (Löschen): aus Liste und Karte entfernen (mit Bestätigung).",
+        "tour.step8.title": "Projektionsinformationen und Kopieren",
+        "tour.step8.body": "Jede Zeile zeigt ein Koordinatensystem und das WKT der Geometrie darin. Mit «Kopieren» landet das WKT in der Zwischenablage. Schließen Sie den Dialog, um zur Karte zurückzukehren.",
+        "tour.step9.title": "Sprache und Hilfe",
+        "tour.step9.body": "Hier wechseln Sie die Sprache. Den Rundgang starten Sie jederzeit über «Hilfe».",
         
         // Language
         "lang.select": "Sprache",
@@ -567,6 +660,37 @@ const translations = {
         "geomType.MultiLineString": "Мультилиния",
         "geomType.MultiPolygon": "Мультиполигон",
         
+        // Tour
+        "tour.helpTooltip": "Обзорный тур",
+        "tour.helpShort": "Справка",
+        "tour.dontShowAgain": "Больше не показывать это введение",
+        "tour.next": "Далее",
+        "tour.prev": "Назад",
+        "tour.done": "Готово",
+        "tour.close": "Закрыть",
+        "tour.progress": "{current} / {total}",
+        "tour.demoGeometryName": "Анкара (пример точки)",
+        "tour.step0.title": "Добро пожаловать",
+        "tour.step0.body": "Online WKT Viewer показывает, рисует и экспортирует геометрии WKT на карте. Далее — инструменты, масштаб и ссылка, подложка, пример точки, панель (WKT/Excel), окно стиля, кнопки строки и проекции.",
+        "tour.step1.title": "Инструменты рисования",
+        "tour.step1.body": "Кнопки для точки, линии и полигона. Рядом — остановить рисование или очистить всё.",
+        "tour.step2.title": "Масштаб и ссылка",
+        "tour.step2.body": "Здесь текущий масштаб. При сдвиге и зуме адрес обновляется (#@широта,долгота,зум). Скопируйте ссылку, чтобы поделиться видом.",
+        "tour.step3.title": "Подложка",
+        "tour.step3.body": "Через значок слоёв — OpenStreetMap, спутник или гибрид.",
+        "tour.step4.title": "Пример точки и список",
+        "tour.step4.body": "Добавлена демо-точка: POINT(32.854046 39.920768) в WGS 84 (EPSG:4326). В туре она подсвечена красным на карте и в списке слева. Далее покажем кнопки «Добавить WKT» и Excel внизу, затем окно стиля.",
+        "tour.step5.title": "Добавление через WKT и Excel",
+        "tour.step5.body": "«Добавить WKT» открывает окно: текст WKT, исходная проекция и при необходимости имя. «Добавить» помещает геометрию на карту (пересчёт в проекцию карты, см. подсказку); затем часто открывается стиль. «Excel» — массовый импорт. Значок скачивания — экспорт в CSV, JSON или GeoJSON. В туре это окно не открывается и вторая точка не добавляется.",
+        "tour.step6.title": "Стиль",
+        "tour.step6.body": "Здесь настраиваются заливка, обводка, толщина и показ подписи на карте. «Имя геометрии» видно в списке и в подписи. В туре пример перекрашен в синий (в палитре и на карте). «Применить» сохраняет изменения; во время тура окно не закрывается.",
+        "tour.step7.title": "Кнопки в строке списка",
+        "tour.step7.body": "Лупа — приблизить к объекту. Палитра — стиль и подпись. Глобус — окно «Сведения о проекции» с WKT в разных СК. Корзина — удалить из списка и с карты (с подтверждением).",
+        "tour.step8.title": "Сведения о проекции и копирование",
+        "tour.step8.body": "Каждая строка — система координат и WKT геометрии в ней. Кнопка «Копировать» копирует WKT в буфер. Закройте окно, чтобы вернуться к карте.",
+        "tour.step9.title": "Язык и справка",
+        "tour.step9.body": "Здесь меняется язык. Тур снова запускается кнопкой «Справка».",
+        
         // Language
         "lang.select": "Язык",
         "lang.tr": "Türkçe",
@@ -621,6 +745,10 @@ function changeLanguage(lang) {
     if (typeof showStatus === 'function') {
         showStatus(`${t('lang.' + lang)}`);
     }
+
+    if (typeof window.onWktViewerLanguageChanged === 'function') {
+        window.onWktViewerLanguageChanged();
+    }
 }
 
 /**
@@ -643,6 +771,11 @@ function applyTranslations() {
     document.querySelectorAll('[data-i18n-title]').forEach(el => {
         const key = el.getAttribute('data-i18n-title');
         el.title = t(key);
+    });
+
+    document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+        const key = el.getAttribute('data-i18n-aria-label');
+        el.setAttribute('aria-label', t(key));
     });
     
     // Elements with data-i18n-tooltip attribute (custom tooltips)
@@ -689,8 +822,8 @@ function toggleLanguagePanel() {
  * Close language panel when clicking outside
  */
 document.addEventListener('click', function(e) {
-    const selector = document.querySelector('.language-selector');
-    if (selector && !selector.contains(e.target)) {
+    const actions = document.querySelector('.header-actions');
+    if (actions && !actions.contains(e.target)) {
         document.getElementById('langPanel')?.classList.remove('open');
     }
 });

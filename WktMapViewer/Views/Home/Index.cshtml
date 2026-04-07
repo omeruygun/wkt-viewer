@@ -12,25 +12,31 @@
             <span data-i18n="app.title">Online WKT Viewer</span>
         </h1>
         <div class="header-spacer"></div>
-        <div class="language-selector">
-            <button class="lang-toggle" onclick="toggleLanguagePanel()" title="Dil / Language">
-                <span id="currentLangFlag" class="fi fi-tr"></span>
-                <span class="material-icons">expand_more</span>
-            </button>
-            <div class="lang-panel" id="langPanel">
-                <button class="lang-option" onclick="changeLanguage('tr')">
-                    <span class="fi fi-tr"></span> Türkçe
+        <div class="header-actions">
+            <div class="language-selector">
+                <button type="button" class="lang-toggle" onclick="toggleLanguagePanel()" title="Dil / Language">
+                    <span id="currentLangFlag" class="fi fi-tr"></span>
+                    <span class="material-icons">expand_more</span>
                 </button>
-                <button class="lang-option" onclick="changeLanguage('en')">
-                    <span class="fi fi-gb"></span> English
-                </button>
-                <button class="lang-option" onclick="changeLanguage('de')">
-                    <span class="fi fi-de"></span> Deutsch
-                </button>
-                <button class="lang-option" onclick="changeLanguage('ru')">
-                    <span class="fi fi-ru"></span> Русский
-                </button>
+                <div class="lang-panel" id="langPanel">
+                    <button type="button" class="lang-option" onclick="changeLanguage('tr')">
+                        <span class="fi fi-tr"></span> Türkçe
+                    </button>
+                    <button type="button" class="lang-option" onclick="changeLanguage('en')">
+                        <span class="fi fi-gb"></span> English
+                    </button>
+                    <button type="button" class="lang-option" onclick="changeLanguage('de')">
+                        <span class="fi fi-de"></span> Deutsch
+                    </button>
+                    <button type="button" class="lang-option" onclick="changeLanguage('ru')">
+                        <span class="fi fi-ru"></span> Русский
+                    </button>
+                </div>
             </div>
+            <button type="button" class="help-tour-btn" id="tourHelpBtn" onclick="startGuidedTour(true)" data-i18n-title="tour.helpTooltip" data-i18n-aria-label="tour.helpTooltip">
+                <span class="material-icons" aria-hidden="true">help_outline</span>
+                <span class="help-tour-btn__label" data-i18n="tour.helpShort">Yardım</span>
+            </button>
         </div>
     </header>
 
@@ -52,7 +58,7 @@
                 </div>
             </div>
             <div class="geometry-list" id="geometryList"></div>
-            <div class="sidebar-footer">
+            <div class="sidebar-footer" id="sidebarFooter">
                 <button class="btn btn-primary" onclick="openWKTModal()">
                     <span class="material-icons">add</span> <span data-i18n="sidebar.addWkt">WKT Ekle</span>
                 </button>
@@ -64,7 +70,7 @@
 
         <!-- Map -->
         <div id="map">
-            <div class="map-toolbar">
+            <div class="map-toolbar" id="mapToolbar">
                 <button class="btn btn-primary" onclick="startDrawing('Point')" data-i18n-tooltip="toolbar.drawPoint" data-tooltip="Nokta Çiz">
                     <span class="material-icons" style="color: #D0021B;">location_on</span>
                 </button>

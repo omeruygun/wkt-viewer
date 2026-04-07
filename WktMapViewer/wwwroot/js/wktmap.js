@@ -56,6 +56,77 @@ if (typeof ol.proj.proj4 !== 'undefined' && ol.proj.proj4.register) {
 }
 
 // ========================================
+// Map position in URL (Google Maps–style fragment: #@lat,lng,15z)
+// ========================================
+const MAP_URL_ZOOM_MIN = 0;
+const MAP_URL_ZOOM_MAX = 22;
+
+function clampMapUrlZoom(z) {
+    if (!Number.isFinite(z)) return 6;
+    return Math.min(MAP_URL_ZOOM_MAX, Math.max(MAP_URL_ZOOM_MIN, z));
+}
+
+/** Parse #@39.9880852,32.7282999,15z (leading @ optional after #) */
+function parseMapViewFromHash() {
+    const raw = (window.location.hash || '').replace(/^#/, '').trim();
+    if (!raw) return null;
+    const m = raw.match(/^@?(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?),(\d+(?:\.\d+)?)z$/i);
+    if (!m) return null;
+    const lat = parseFloat(m[1]);
+    const lng = parseFloat(m[2]);
+    const z = parseFloat(m[3]);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng) || !Number.isFinite(z)) return null;
+    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return null;
+    return {
+        center: ol.proj.fromLonLat([lng, lat]),
+        zoom: clampMapUrlZoom(z)
+    };
+}
+
+function formatZoomZ(zoom) {
+    if (!Number.isFinite(zoom)) return '6z';
+    const r = Math.round(zoom * 1000) / 1000;
+    if (Math.abs(r - Math.round(r)) < 0.0005) {
+        return Math.round(r) + 'z';
+    }
+    const s = r.toFixed(2).replace(/\.?0+$/, '');
+    return s + 'z';
+}
+
+/** Returns fragment without # e.g. @39.9880852,32.7282999,15z */
+function formatMapHashFragment(lat, lng, zoom) {
+    return '@' + lat.toFixed(7) + ',' + lng.toFixed(7) + ',' + formatZoomZ(zoom);
+}
+
+function getMapViewLonLatZoom() {
+    const view = map.getView();
+    const z = view.getZoom();
+    const c = ol.proj.toLonLat(view.getCenter());
+    return { lng: c[0], lat: c[1], zoom: z };
+}
+
+function replaceUrlFromMap() {
+    if (!map) return;
+    const { lat, lng, zoom } = getMapViewLonLatZoom();
+    if (!Number.isFinite(lat) || !Number.isFinite(lng) || !Number.isFinite(zoom)) return;
+    const frag = formatMapHashFragment(lat, lng, zoom);
+    const next = window.location.pathname + window.location.search + '#' + frag;
+    const cur = window.location.pathname + window.location.search + (window.location.hash || '');
+    if (next !== cur) {
+        history.replaceState(null, '', next);
+    }
+}
+
+function applyMapViewFromHash() {
+    if (!map) return;
+    const v = parseMapViewFromHash();
+    if (!v) return;
+    const view = map.getView();
+    view.setCenter(v.center);
+    view.setZoom(v.zoom);
+}
+
+// ========================================
 // Initialization
 // ========================================
 function initMap() {
@@ -81,6 +152,10 @@ function initMap() {
         })
     };
 
+    const fromUrl = parseMapViewFromHash();
+    const defaultCenter = ol.proj.fromLonLat([35, 39]);
+    const defaultZoom = 6;
+
     map = new ol.Map({
         target: 'map',
         layers: [
@@ -89,13 +164,14 @@ function initMap() {
             baseLayers.hybrid
         ],
         view: new ol.View({
-            center: ol.proj.fromLonLat([35, 39]),
-            zoom: 6
+            center: fromUrl ? fromUrl.center : defaultCenter,
+            zoom: fromUrl ? fromUrl.zoom : defaultZoom
         }),
         controls: ol.control.defaults({
             attribution: false
         })
     });
+    window.wktMapViewerMap = map;
 
     // Update zoom level display
     function updateZoomLevel() {
@@ -106,6 +182,13 @@ function initMap() {
     updateZoomLevel();
     map.getView().on('change:resolution', updateZoomLevel);
     map.getView().on('change:center', updateZoomLevel);
+
+    map.on('moveend', replaceUrlFromMap);
+    requestAnimationFrame(replaceUrlFromMap);
+
+    window.addEventListener('hashchange', function () {
+        applyMapViewFromHash();
+    });
 
     // Feature click handler
     map.on('click', function(event) {
@@ -349,6 +432,9 @@ function refreshGeometryList() {
     geometries.forEach((geom) => {
         const item = document.createElement('div');
         item.className = 'geometry-item' + (selectedGeometryId === geom.id ? ' selected' : '');
+        if (geom.tourDemo) {
+            item.id = 'tourDemoGeometryItem';
+        }
         item.innerHTML = `
             <div class="geometry-item-info" onclick="selectGeometry(${geom.id})">
                 <div class="geometry-item-name">${escapeHtml(geom.name)}</div>
@@ -369,6 +455,83 @@ function selectGeometry(id) {
     selectedGeometryId = id;
     refreshGeometryList();
 }
+
+/** @param {string} wkt */
+function isTourDemoAnkaraPointWkt(wkt) {
+    if (!wkt || typeof wkt !== 'string') return false;
+    var m = wkt.trim().match(/^POINT\s*\(\s*([\d.-]+)\s+([\d.-]+)\s*\)\s*$/i);
+    if (!m) return false;
+    return Math.abs(parseFloat(m[1]) - 32.854046) < 1e-6 && Math.abs(parseFloat(m[2]) - 39.920768) < 1e-6;
+}
+
+/**
+ * Guided tour: add a sample point (WGS 84) without opening modals.
+ * @returns {number|null} geometry id
+ */
+function ensureTourDemoGeometry() {
+    if (typeof geometries === 'undefined' || !map) return null;
+    const existing = geometries.find(function (g) { return g.tourDemo === true; });
+    if (existing) {
+        window.wktTourDemoGeometryId = existing.id;
+        return existing.id;
+    }
+    const dupes = geometries.filter(function (g) {
+        return g.type === 'Point' && isTourDemoAnkaraPointWkt(g.wkt);
+    });
+    if (dupes.length > 0) {
+        var keep = dupes[0];
+        keep.tourDemo = true;
+        for (var d = 1; d < dupes.length; d++) {
+            var gid = dupes[d].id;
+            geometries = geometries.filter(function (g) { return g.id !== gid; });
+            if (styles[gid]) {
+                map.removeLayer(styles[gid].vectorLayer);
+                delete styles[gid];
+            }
+            if (selectedGeometryId === gid) {
+                selectedGeometryId = null;
+            }
+        }
+        window.wktTourDemoGeometryId = keep.id;
+        refreshGeometryList();
+        return keep.id;
+    }
+    const demoWkt = 'POINT (32.854046 39.920768)';
+    const sourceProj = 'EPSG:4326';
+    try {
+        const format = new ol.format.WKT();
+        const feature = format.readFeature(demoWkt, {
+            dataProjection: sourceProj,
+            featureProjection: 'EPSG:3857'
+        });
+        const id = generateId();
+        const name = typeof t === 'function' ? t('tour.demoGeometryName') : 'Demo point';
+        feature.set('id', id);
+        feature.set('name', name);
+        const geometry = {
+            id: id,
+            name: name,
+            type: feature.getGeometry().getType(),
+            wkt: demoWkt.trim(),
+            feature: feature,
+            sourceProjection: sourceProj,
+            tourDemo: true
+        };
+        geometries.push(geometry);
+        addGeometryToMap(feature, id);
+        refreshGeometryList();
+        if (typeof zoomToGeometry === 'function') {
+            zoomToGeometry(id);
+        }
+        window.wktTourDemoGeometryId = id;
+        return id;
+    } catch (e) {
+        console.warn('ensureTourDemoGeometry:', e);
+        return null;
+    }
+}
+
+window.ensureTourDemoGeometry = ensureTourDemoGeometry;
 
 async function deleteGeometry(id) {
     const confirmed = await showConfirmDialog(t('confirm.delete'), {
@@ -494,7 +657,7 @@ function closeStyleModal() {
     });
 }
 
-function applyStyle() {
+function applyStyle(keepModalOpen) {
     const id = parseInt(document.getElementById('styleModal').dataset.geometryId);
     const geom = geometries.find(g => g.id === id);
     if (!geom) return;
@@ -555,9 +718,37 @@ function applyStyle() {
     }
 
     refreshGeometryList();
-    closeStyleModal();
-    showStatus(t('status.styleApplied'));
+    if (!keepModalOpen) {
+        closeStyleModal();
+        showStatus(t('status.styleApplied'));
+    }
 }
+
+/** Guided tour: force demo point fill color on the map (WKT uses red accents in the UI). */
+function setTourDemoPointFill(hex) {
+    const id = window.wktTourDemoGeometryId;
+    if (id == null || !styles[id]) return;
+    const geom = geometries.find(function (g) { return g.id === id; });
+    if (!geom || (geom.type !== 'Point' && geom.type !== 'MultiPoint')) return;
+    const name = geom.feature.get('name') || geom.name || '';
+    const showLabel = styles[id].showLabel !== false;
+    const labelStyle = showLabel ? createLabelStyle(name, -20) : undefined;
+    const strokeColor = '#ffffff';
+    const strokeWidth = 2;
+    const radius = 6;
+    const style = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: radius,
+            fill: new ol.style.Fill({ color: hex }),
+            stroke: new ol.style.Stroke({ color: strokeColor, width: strokeWidth })
+        }),
+        text: labelStyle
+    });
+    styles[id].vectorLayer.setStyle(style);
+    styles[id].style = style;
+}
+
+window.setTourDemoPointFill = setTourDemoPointFill;
 
 // ========================================
 // Projection Modal Functions

@@ -1,0 +1,10 @@
+**/.git
+**/.vs
+**/bin
+**/obj
+**/*.user
+**/*.rsuser
+**/PublishProfiles/*.user
+**/.dockerignore
+**/Thumbs.db
+**/.DS_Store
