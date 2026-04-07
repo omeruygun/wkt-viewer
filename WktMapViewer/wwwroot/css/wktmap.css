@@ -33,6 +33,9 @@ header {
     display: flex;
     align-items: center;
     gap: 12px;
+    min-width: 0;
+    position: relative;
+    z-index: 4000;
 }
 
 header h1 {
@@ -631,7 +634,26 @@ header h1 .material-icons {
     padding: 12px;
     border-top: 1px solid #e0e0e0;
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
+    align-items: center;
+}
+
+.sidebar-github-link {
+    flex: 1 1 100%;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #0969da;
+    text-decoration: none;
+    padding: 6px 0 2px;
+    border-top: 1px solid #f0f0f0;
+    margin-top: 4px;
+}
+
+.sidebar-github-link:hover {
+    text-decoration: underline;
+    color: #0550ae;
 }
 
 /* ========================================
@@ -1543,6 +1565,28 @@ header h1 .material-icons {
 }
 
 /* ========================================
+   Responsive — narrow header (GitHub + Yardım taşmasın)
+   ======================================== */
+@media (max-width: 900px) {
+    header {
+        flex-wrap: wrap;
+        row-gap: 10px;
+    }
+
+    header .header-spacer {
+        display: none;
+    }
+
+    header .header-actions {
+        flex-basis: 100%;
+        width: 100%;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+/* ========================================
    Responsive - Tablet
    ======================================== */
 @media (max-width: 1024px) {
@@ -1920,7 +1964,8 @@ header h1 .material-icons {
     align-items: center;
     gap: 8px;
     flex-shrink: 0;
-    min-width: fit-content;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .help-tour-btn {
@@ -1929,6 +1974,7 @@ header h1 .material-icons {
     justify-content: center;
     gap: 6px;
     min-height: 40px;
+    flex-shrink: 0;
     padding: 6px 12px;
     background: #f5f5f5;
     border: 1px solid #e0e0e0;
@@ -1953,6 +1999,56 @@ header h1 .material-icons {
 .help-tour-btn .material-icons {
     font-size: 22px;
     color: #616161;
+}
+
+.github-repo-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    flex-shrink: 0;
+    padding: 0;
+    background: #f0f3f6;
+    border: 1px solid #d0d7de;
+    border-radius: 8px;
+    color: #24292f;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.github-repo-link--labeled {
+    width: auto;
+    min-width: auto;
+    height: 40px;
+    padding: 0 12px;
+    gap: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.github-repo-link__label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #24292f;
+    white-space: nowrap;
+}
+
+.github-repo-link--labeled:hover .github-repo-link__label {
+    color: #0969da;
+}
+
+.github-repo-link:hover {
+    background: #eaeef2;
+    border-color: #09638b;
+    color: #0969da;
+}
+
+.github-repo-link__icon {
+    display: block;
+    flex-shrink: 0;
 }
 
 html.tour-active {
@@ -2005,13 +2101,26 @@ html.tour-style-modal-step #styleModal.active .modal {
 .tour-popover {
     position: fixed;
     z-index: 2;
+    display: flex;
+    flex-direction: column;
     max-width: calc(100vw - 32px);
+    max-height: min(90vh, 720px);
     padding: 20px 20px 16px;
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
     pointer-events: auto;
     box-sizing: border-box;
+}
+
+.tour-popover__main {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-right: 4px;
+    margin-right: -4px;
 }
 
 .tour-popover--center {
@@ -2087,8 +2196,37 @@ html.tour-style-modal-step #styleModal.active .modal {
 .tour-popover__actions {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 10px;
     justify-content: flex-end;
+    flex-shrink: 0;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e8e8e8;
+}
+
+.tour-popover__actions-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.tour-popover__restart {
+    margin-right: auto;
+    border: 1px solid #cfd8dc;
+    background: #fff;
+    color: #0f766e;
+    font-weight: 600;
+    font-size: 13px;
+    min-height: 44px;
+    white-space: nowrap;
+}
+
+.tour-popover__restart:hover {
+    background: #f0fdfa;
+    border-color: #0f766e;
+    color: #0d5c56;
 }
 
 .tour-popover__actions .btn {
@@ -2096,6 +2234,22 @@ html.tour-style-modal-step #styleModal.active .modal {
 }
 
 @media (max-width: 768px) {
+    .github-repo-link:not(.github-repo-link--labeled) {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+    }
+
+    .github-repo-link--labeled {
+        height: 38px;
+        padding: 0 10px;
+    }
+
+    .github-repo-link__icon {
+        width: 20px;
+        height: 20px;
+    }
+
     .help-tour-btn {
         min-height: 38px;
         padding: 4px 10px;
@@ -2104,6 +2258,23 @@ html.tour-style-modal-step #styleModal.active .modal {
 
     .help-tour-btn__label {
         font-size: 12px;
+    }
+
+    .tour-popover {
+        max-height: min(88vh, 640px);
+    }
+
+    .tour-popover__restart {
+        width: 100%;
+        margin-right: 0;
+        order: 2;
+    }
+
+    .tour-popover__actions-nav {
+        width: 100%;
+        margin-left: 0;
+        order: 1;
+        justify-content: flex-end;
     }
 }
 

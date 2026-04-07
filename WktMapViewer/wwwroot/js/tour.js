@@ -159,14 +159,18 @@
             '<div class="tour-popover" role="dialog" aria-modal="true" aria-labelledby="tourTitle">' +
             '<button type="button" class="tour-popover__close" id="tourCloseBtn" aria-label="">' +
             '<span class="material-icons">close</span></button>' +
+            '<div class="tour-popover__main">' +
             '<div class="tour-popover__progress" id="tourProgress"></div>' +
             '<h3 class="tour-popover__title" id="tourTitle"></h3>' +
             '<p class="tour-popover__body" id="tourBody"></p>' +
             '<label class="tour-popover__skip"><input type="checkbox" id="tourDontShowAgain" /> <span id="tourDontShowLabel"></span></label>' +
+            '</div>' +
             '<div class="tour-popover__actions">' +
+            '<button type="button" class="btn tour-popover__restart" id="tourRestartBtn"></button>' +
+            '<div class="tour-popover__actions-nav">' +
             '<button type="button" class="btn btn-secondary" id="tourPrevBtn"></button>' +
             '<button type="button" class="btn btn-primary" id="tourNextBtn"></button>' +
-            '</div></div>'
+            '</div></div></div>'
         );
     }
 
@@ -180,14 +184,19 @@
             total: String(getStepCount())
         });
         document.getElementById('tourDontShowLabel').textContent = t('tour.dontShowAgain');
+        document.getElementById('tourRestartBtn').textContent = t('tour.restart');
+        document.getElementById('tourRestartBtn').setAttribute('aria-label', t('tour.restart'));
+        document.getElementById('tourRestartBtn').setAttribute('title', t('tour.restart'));
         document.getElementById('tourPrevBtn').textContent = t('tour.prev');
         document.getElementById('tourNextBtn').textContent =
             i >= getStepCount() - 1 ? t('tour.done') : t('tour.next');
         document.getElementById('tourCloseBtn').setAttribute('aria-label', t('tour.close'));
+        document.getElementById('tourCloseBtn').setAttribute('title', t('tour.closeDetail'));
 
         const prev = document.getElementById('tourPrevBtn');
         prev.disabled = i === 0;
-        prev.style.visibility = i === 0 ? 'hidden' : 'visible';
+        prev.style.visibility = 'visible';
+        prev.style.opacity = i === 0 ? '0.45' : '1';
 
         syncTourModalChrome();
     }
@@ -325,6 +334,36 @@
         }
     }
 
+    function restartTourFromBeginning() {
+        if (!tourRoot) return;
+        tourIndex = 0;
+        tourEnsureSidebarClosedMobile();
+        if (typeof closeProjectionModal === 'function') closeProjectionModal();
+        if (typeof closeWKTModal === 'function') closeWKTModal();
+        if (typeof closeStyleModal === 'function') closeStyleModal();
+        document.documentElement.classList.remove(
+            'tour-projection-step',
+            'tour-wkt-modal-step',
+            'tour-style-modal-step'
+        );
+        if (tourRoot) {
+            tourRoot.style.zIndex = '';
+            var overlay = tourRoot.querySelector('.tour-overlay');
+            var spotlight = tourRoot.querySelector('.tour-spotlight');
+            var popover = tourRoot.querySelector('.tour-popover');
+            if (overlay) overlay.style.display = '';
+            if (spotlight) spotlight.style.display = '';
+            if (popover) popover.style.zIndex = '';
+        }
+        var before0 = STEP_BEFORE[0];
+        if (typeof before0 === 'function') before0();
+        requestAnimationFrame(function () {
+            updatePopoverTexts();
+            layoutTour();
+            requestAnimationFrame(layoutTour);
+        });
+    }
+
     function goStep(delta) {
         const next = tourIndex + delta;
         if (next < 0 || next >= getStepCount()) return;
@@ -378,6 +417,9 @@
     function bindPopoverActions() {
         document.getElementById('tourCloseBtn').addEventListener('click', function () {
             endTour(true);
+        });
+        document.getElementById('tourRestartBtn').addEventListener('click', function () {
+            restartTourFromBeginning();
         });
         document.getElementById('tourPrevBtn').addEventListener('click', function () {
             goStep(-1);

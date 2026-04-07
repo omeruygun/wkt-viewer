@@ -7,6 +7,8 @@ const translations = {
     tr: {
         // Header
         "app.title": "Online WKT Viewer",
+        "header.githubRepo": "Kaynak kodu — GitHub deposu",
+        "header.githubShort": "GitHub",
         
         // Sidebar
         "sidebar.geometries": "Geometriler",
@@ -140,6 +142,8 @@ const translations = {
         // Tour
         "tour.helpTooltip": "Yardım turu",
         "tour.helpShort": "Yardım",
+        "tour.restart": "Baştan başlat",
+        "tour.closeDetail": "Turu kapat (Esc)",
         "tour.dontShowAgain": "Bu tanıtımı bir daha gösterme",
         "tour.next": "İleri",
         "tour.prev": "Geri",
@@ -186,6 +190,8 @@ const translations = {
     en: {
         // Header
         "app.title": "Online WKT Viewer",
+        "header.githubRepo": "Source code on GitHub",
+        "header.githubShort": "GitHub",
         
         // Sidebar
         "sidebar.geometries": "Geometries",
@@ -319,6 +325,8 @@ const translations = {
         // Tour
         "tour.helpTooltip": "Guided tour",
         "tour.helpShort": "Help",
+        "tour.restart": "Start over",
+        "tour.closeDetail": "Close tour (Esc)",
         "tour.dontShowAgain": "Don't show this introduction again",
         "tour.next": "Next",
         "tour.prev": "Back",
@@ -358,6 +366,8 @@ const translations = {
     de: {
         // Header
         "app.title": "Online WKT Viewer",
+        "header.githubRepo": "Quellcode auf GitHub",
+        "header.githubShort": "GitHub",
         
         // Sidebar
         "sidebar.geometries": "Geometrien",
@@ -491,6 +501,8 @@ const translations = {
         // Tour
         "tour.helpTooltip": "Rundgang",
         "tour.helpShort": "Hilfe",
+        "tour.restart": "Von vorne",
+        "tour.closeDetail": "Rundgang schließen (Esc)",
         "tour.dontShowAgain": "Diese Einführung nicht mehr anzeigen",
         "tour.next": "Weiter",
         "tour.prev": "Zurück",
@@ -530,6 +542,8 @@ const translations = {
     ru: {
         // Header
         "app.title": "Online WKT Viewer",
+        "header.githubRepo": "Исходный код на GitHub",
+        "header.githubShort": "GitHub",
         
         // Sidebar
         "sidebar.geometries": "Геометрии",
@@ -663,6 +677,8 @@ const translations = {
         // Tour
         "tour.helpTooltip": "Обзорный тур",
         "tour.helpShort": "Справка",
+        "tour.restart": "Сначала",
+        "tour.closeDetail": "Закрыть тур (Esc)",
         "tour.dontShowAgain": "Больше не показывать это введение",
         "tour.next": "Далее",
         "tour.prev": "Назад",
