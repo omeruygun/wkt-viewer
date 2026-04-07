@@ -1,0 +1,60 @@
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.rsuser
+*.sln.docstates
+
+## Publish / package
+*.publishsettings
+*.pubxml.user
+**/PublishProfiles/*.user
+**/AppPackages/
+**/BundleArtifacts/
+
+## Rider / VS Code (optional local)
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+## NuGet
+*.nupkg
+**/*.nuget.props
+**/*.nuget.targets
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## OS / tooling
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.DS_Store
+
+## Test / coverage
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+coverage*.json
+coverage*.xml
+
+## ASP.NET
+appsettings.*.local.json
+secrets.json
+ScaffoldingReadMe.txt

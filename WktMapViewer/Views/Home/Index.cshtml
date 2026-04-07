@@ -1,0 +1,526 @@
+@{
+    ViewData["Title"] = "Online WKT Viewer";
+}
+
+<div class="container">
+    <header>
+        <button class="mobile-menu-toggle" id="menuToggle" onclick="toggleSidebar()">
+            <span class="material-icons" id="menuIcon">menu</span>
+        </button>
+        <h1>
+            <img src="~/logo_wkt_viewer.png" alt="WKT Viewer Logo" class="header-logo" />
+            <span data-i18n="app.title">Online WKT Viewer</span>
+        </h1>
+        <div class="header-spacer"></div>
+        <div class="language-selector">
+            <button class="lang-toggle" onclick="toggleLanguagePanel()" title="Dil / Language">
+                <span id="currentLangFlag" class="fi fi-tr"></span>
+                <span class="material-icons">expand_more</span>
+            </button>
+            <div class="lang-panel" id="langPanel">
+                <button class="lang-option" onclick="changeLanguage('tr')">
+                    <span class="fi fi-tr"></span> Türkçe
+                </button>
+                <button class="lang-option" onclick="changeLanguage('en')">
+                    <span class="fi fi-gb"></span> English
+                </button>
+                <button class="lang-option" onclick="changeLanguage('de')">
+                    <span class="fi fi-de"></span> Deutsch
+                </button>
+                <button class="lang-option" onclick="changeLanguage('ru')">
+                    <span class="fi fi-ru"></span> Русский
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <!-- Sidebar Overlay (for mobile) -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+        
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><span class="material-icons">list</span> <span data-i18n="sidebar.geometries">Geometriler</span></h2>
+                <div class="sidebar-header-actions">
+                    <button class="btn-icon" onclick="openExportModal()" data-i18n-tooltip="sidebar.export" data-tooltip="Dışa Aktar" data-tooltip-pos="bottom" id="exportBtn">
+                        <span class="material-icons">download</span>
+                    </button>
+                    <button class="sidebar-close" onclick="toggleSidebar()">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+            </div>
+            <div class="geometry-list" id="geometryList"></div>
+            <div class="sidebar-footer">
+                <button class="btn btn-primary" onclick="openWKTModal()">
+                    <span class="material-icons">add</span> <span data-i18n="sidebar.addWkt">WKT Ekle</span>
+                </button>
+                <button class="btn btn-secondary" onclick="openExcelModal()" data-i18n-tooltip="excelModal.title" data-tooltip="Excel'den İçe Aktar" data-tooltip-pos="bottom">
+                    <span class="material-icons">upload_file</span> <span data-i18n="sidebar.excel">Excel</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Map -->
+        <div id="map">
+            <div class="map-toolbar">
+                <button class="btn btn-primary" onclick="startDrawing('Point')" data-i18n-tooltip="toolbar.drawPoint" data-tooltip="Nokta Çiz">
+                    <span class="material-icons" style="color: #D0021B;">location_on</span>
+                </button>
+                <button class="btn btn-primary" onclick="startDrawing('LineString')" data-i18n-tooltip="toolbar.drawLine" data-tooltip="Çizgi Çiz">
+                    <span class="material-icons" style="color: #D0021B;">edit</span>
+                </button>
+                <button class="btn btn-primary" onclick="startDrawing('Polygon')" data-i18n-tooltip="toolbar.drawPolygon" data-tooltip="Alan Çiz">
+                    <span class="material-icons" style="color: #D0021B;">crop_square</span>
+                </button>
+                <button class="btn btn-primary" onclick="stopDrawing()" data-i18n-tooltip="toolbar.stopDrawing" data-tooltip="Çizimi Durdur">
+                    <span class="material-icons" style="color: #D0021B;">stop</span>
+                </button>
+                <button class="btn btn-primary" onclick="clearAll()" data-i18n-tooltip="toolbar.clearAll" data-tooltip="Tümünü Temizle">
+                    <span class="material-icons" style="color: #D0021B;">delete_sweep</span>
+                </button>
+            </div>
+            <div id="zoomLevel" class="zoom-info">
+                <strong><span class="material-icons" style="display: inline; font-size: 18px; vertical-align: middle; margin-right: 4px;">zoom_in</span>Zoom:</strong> <span id="zoomValue">6</span>
+            </div>
+            
+            <!-- Basemap Switcher -->
+            <div class="basemap-switcher" id="basemapSwitcher">
+                <button class="basemap-toggle" onclick="toggleBasemapPanel()" data-i18n-tooltip="basemap.title" data-tooltip="Altlık Katman" data-tooltip-pos="right">
+                    <span class="material-icons">layers</span>
+                </button>
+                <div class="basemap-panel" id="basemapPanel">
+                    <div class="basemap-panel-header" data-i18n="basemap.title">Altlık Katman</div>
+                    <div class="basemap-options">
+                        <label class="basemap-option active" data-basemap="osm">
+                            <input type="radio" name="basemap" value="osm" checked onchange="changeBasemap('osm')">
+                            <div class="basemap-preview osm-preview"></div>
+                            <span data-i18n="basemap.osm">OpenStreetMap</span>
+                        </label>
+                        <label class="basemap-option" data-basemap="satellite">
+                            <input type="radio" name="basemap" value="satellite" onchange="changeBasemap('satellite')">
+                            <div class="basemap-preview satellite-preview"></div>
+                            <span data-i18n="basemap.satellite">Google Uydu</span>
+                        </label>
+                        <label class="basemap-option" data-basemap="hybrid">
+                            <input type="radio" name="basemap" value="hybrid" onchange="changeBasemap('hybrid')">
+                            <div class="basemap-preview hybrid-preview"></div>
+                            <span data-i18n="basemap.hybrid">Hibrit</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- WKT Input Modal -->
+<div class="modal-overlay" id="wktModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2><span class="material-icons" style="display: inline; font-size: 24px; vertical-align: middle; margin-right: 8px;">add_location</span><span data-i18n="wktModal.title">WKT String Ekle</span></h2>
+            <button onclick="closeWKTModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label data-i18n="wktModal.wktString">WKT String</label>
+                <textarea id="wktInput" data-i18n-placeholder="wktModal.wktPlaceholder" placeholder="Örnek: POINT(100 50)"></textarea>
+            </div>
+            <div class="form-group">
+                <label data-i18n="wktModal.sourceProjection">Kaynak Projeksiyon (WKT'nin Projeksiyonu)</label>
+                <select id="sourceProjection">
+                    <option value="EPSG:4326">EPSG:4326 - WGS 84</option>
+                    <option value="EPSG:3857">EPSG:3857 - Web Mercator</option>
+                    <optgroup label="Türkiye Koordinat Sistemleri">
+                        <option value="SR-ORG:7839">TM 42 (Merkez Meridyen: 42°)</option>
+                        <option value="SR-ORG:7838">TM 39 (Merkez Meridyen: 39°)</option>
+                        <option value="SR-ORG:7837">TM 36 (Merkez Meridyen: 36°)</option>
+                        <option value="SR-ORG:7836">TM 33 (Merkez Meridyen: 33°)</option>
+                        <option value="SR-ORG:7833">TM 30 (Merkez Meridyen: 30°)</option>
+                        <option value="SR-ORG:7835">TM 27 (Merkez Meridyen: 27°)</option>
+                    </optgroup>
+                    <optgroup label="Diğer Sistemler">
+                        <option value="EPSG:2154">EPSG:2154 - Lambert 93</option>
+                        <option value="EPSG:32632">EPSG:32632 - UTM Zone 32N</option>
+                        <option value="EPSG:28350">EPSG:28350 - Australian GDA94</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="form-group info-box">
+                <p>
+                    <strong>ℹ️</strong> <span data-i18n="wktModal.note">Geometri otomatik olarak haritanın projeksiyonuna (EPSG:3857) dönüştürülecektir.</span>
+                </p>
+            </div>
+            <div class="form-group">
+                <label data-i18n="wktModal.geometryName">Geometri Adı (İsteğe Bağlı)</label>
+                <input type="text" id="geometryName" data-i18n-placeholder="wktModal.namePlaceholder" placeholder="Örnek: Şehir Merkezi">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeWKTModal()" data-i18n="btn.cancel">İptal</button>
+            <button class="btn btn-primary" onclick="addWKTGeometry()"><span class="material-icons">check</span> <span data-i18n="btn.add">Ekle</span></button>
+        </div>
+    </div>
+</div>
+
+<!-- Style Editor Modal -->
+<div class="modal-overlay" id="styleModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="styleModalTitle"><span class="material-icons" style="display: inline; font-size: 24px; vertical-align: middle; margin-right: 8px;">palette</span><span data-i18n="styleModal.title">Stil Düzenle</span></h2>
+            <button onclick="closeStyleModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label data-i18n="styleModal.geometryName">Geometri Adı</label>
+                <input type="text" id="styleGeometryName">
+            </div>
+            
+            <div class="form-group checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="showLabelCheckbox" checked>
+                    <span class="checkmark"></span>
+                    <span data-i18n="styleModal.showLabel">Haritada etiket göster</span>
+                </label>
+            </div>
+
+            <div class="style-group" id="pointStyleGroup" data-type="Point">
+                <label style="font-weight: 600; color: #D0021B;"><span class="material-icons" style="display: inline; font-size: 20px; vertical-align: middle; margin-right: 6px;">location_on</span><span data-i18n="styleModal.pointStyle">Nokta Stili</span></label>
+                <div class="style-row">
+                    <div class="form-group">
+                        <label data-i18n="styleModal.radius">Yarıçap (px)</label>
+                        <input type="number" id="pointRadius" value="5" min="1" max="20">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="styleModal.color">Renk</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="pointColor" value="#D0021B">
+                            <input type="text" id="pointColorHex" value="#D0021B" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="style-row">
+                    <div class="form-group">
+                        <label data-i18n="styleModal.strokeColor">Çerçeve Rengi</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="pointStroke" value="#ffffff">
+                            <input type="text" id="pointStrokeHex" value="#ffffff" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="styleModal.strokeWidth">Çerçeve Kalınlığı (px)</label>
+                        <input type="number" id="pointStrokeWidth" value="2" min="0" max="10">
+                    </div>
+                </div>
+            </div>
+
+            <div class="style-group" id="lineStyleGroup" data-type="LineString">
+                <label style="font-weight: 600; color: #FF9800;"><span class="material-icons" style="display: inline; font-size: 20px; vertical-align: middle; margin-right: 6px;">edit</span><span data-i18n="styleModal.lineStyle">Çizgi Stili</span></label>
+                <div class="style-row">
+                    <div class="form-group">
+                        <label data-i18n="styleModal.color">Renk</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="lineColor" value="#FF9800">
+                            <input type="text" id="lineColorHex" value="#FF9800" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="styleModal.width">Kalınlık (px)</label>
+                        <input type="number" id="lineWidth" value="3" min="1" max="15">
+                    </div>
+                </div>
+            </div>
+
+            <div class="style-group" id="polygonStyleGroup" data-type="Polygon">
+                <label style="font-weight: 600; color: #D0021B;"><span class="material-icons" style="display: inline; font-size: 20px; vertical-align: middle; margin-right: 6px;">crop_square</span><span data-i18n="styleModal.polygonStyle">Alan Stili</span></label>
+                <div class="style-row">
+                    <div class="form-group">
+                        <label data-i18n="styleModal.fillColor">Dolgu Rengi</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="polygonFill" value="#D0021B">
+                            <input type="text" id="polygonFillHex" value="#D0021B" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="styleModal.fillOpacity">Dolgu Opaklığı (%)</label>
+                        <input type="number" id="polygonFillOpacity" value="20" min="0" max="100">
+                    </div>
+                </div>
+                <div class="style-row">
+                    <div class="form-group">
+                        <label data-i18n="styleModal.strokeColor">Çerçeve Rengi</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="polygonStroke" value="#D0021B">
+                            <input type="text" id="polygonStrokeHex" value="#D0021B" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="styleModal.strokeWidth">Çerçeve Kalınlığı (px)</label>
+                        <input type="number" id="polygonStrokeWidth" value="2" min="1" max="10">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeStyleModal()" data-i18n="btn.cancel">İptal</button>
+            <button class="btn btn-primary" onclick="applyStyle()"><span class="material-icons">check</span> <span data-i18n="btn.apply">Uygula</span></button>
+        </div>
+    </div>
+</div>
+
+<!-- Excel Import Modal -->
+<div class="modal-overlay" id="excelModal">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h2><span class="material-icons" style="display: inline; font-size: 24px; vertical-align: middle; margin-right: 8px;">upload_file</span><span data-i18n="excelModal.title">Excel'den İçe Aktar</span></h2>
+            <button onclick="closeExcelModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <!-- Step 1: File Upload -->
+            <div id="excelStep1">
+                <div class="form-group">
+                    <label data-i18n="excelModal.selectFile">Excel Dosyası Seçin (.xlsx, .xls)</label>
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <input type="file" id="excelFileInput" accept=".xlsx,.xls" onchange="handleExcelFile(this)" style="display: none;">
+                        <div class="file-upload-content" onclick="document.getElementById('excelFileInput').click()">
+                            <span class="material-icons" style="font-size: 48px; color: #D0021B;">cloud_upload</span>
+                            <p data-i18n="excelModal.dropzone">Dosya seçmek için tıklayın veya sürükleyip bırakın</p>
+                            <small data-i18n="excelModal.format">.xlsx veya .xls formatında</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2: Column Mapping -->
+            <div id="excelStep2" style="display: none;">
+                <div class="excel-info-box">
+                    <span class="material-icons">info</span>
+                    <div>
+                        <strong id="excelFileName">dosya.xlsx</strong>
+                        <span id="excelRowCount">0 <span data-i18n="excelModal.rowsFound">satır bulundu</span></span>
+                    </div>
+                    <button class="btn btn-sm btn-secondary" onclick="resetExcelUpload()">
+                        <span class="material-icons">refresh</span> <span data-i18n="excelModal.differentFile">Farklı Dosya</span>
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label data-i18n="excelModal.selectSheet">Sayfa Seçin</label>
+                    <select id="excelSheetSelect" onchange="onSheetChange()">
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="required">*</span> <span data-i18n="excelModal.wktColumn">WKT Sütunu (Zorunlu)</span></label>
+                    <select id="excelWktColumn">
+                        <option value="" data-i18n="excelModal.selectColumn">-- Sütun Seçin --</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label data-i18n="excelModal.labelColumn">Etiket/İsim Sütunu (İsteğe Bağlı)</label>
+                    <select id="excelLabelColumn">
+                        <option value="" data-i18n="excelModal.noLabel">-- Etiket Yok --</option>
+                    </select>
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="excelShowLabels" checked>
+                        <span class="checkmark"></span>
+                        <span data-i18n="excelModal.showLabels">Haritada etiketleri göster</span>
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label data-i18n="excelModal.sourceProjection">Kaynak Projeksiyon</label>
+                    <select id="excelProjection">
+                        <option value="EPSG:4326">EPSG:4326 - WGS 84</option>
+                        <option value="EPSG:3857">EPSG:3857 - Web Mercator</option>
+                        <optgroup label="Türkiye Koordinat Sistemleri">
+                            <option value="SR-ORG:7839">TM 42 (Merkez Meridyen: 42°)</option>
+                            <option value="SR-ORG:7838">TM 39 (Merkez Meridyen: 39°)</option>
+                            <option value="SR-ORG:7837">TM 36 (Merkez Meridyen: 36°)</option>
+                            <option value="SR-ORG:7836">TM 33 (Merkez Meridyen: 33°)</option>
+                            <option value="SR-ORG:7833">TM 30 (Merkez Meridyen: 30°)</option>
+                            <option value="SR-ORG:7835">TM 27 (Merkez Meridyen: 27°)</option>
+                        </optgroup>
+                        <optgroup label="Diğer Sistemler">
+                            <option value="EPSG:2154">EPSG:2154 - Lambert 93</option>
+                            <option value="EPSG:32632">EPSG:32632 - UTM Zone 32N</option>
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label data-i18n="excelModal.geometryStyle">Geometri Stili</label>
+                    <div class="style-row">
+                        <div class="form-group">
+                            <label data-i18n="styleModal.fillColor">Dolgu Rengi</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="excelFillColor" value="#D0021B">
+                                <input type="text" id="excelFillColorHex" value="#D0021B" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="styleModal.strokeColor">Çerçeve Rengi</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="excelStrokeColor" value="#ffffff">
+                                <input type="text" id="excelStrokeColorHex" value="#ffffff" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Preview Table -->
+                <div class="form-group">
+                    <label data-i18n="excelModal.preview">Veri Önizleme (İlk 5 Satır)</label>
+                    <div class="excel-preview-container">
+                        <table class="excel-preview-table" id="excelPreviewTable">
+                            <thead id="excelPreviewHead"></thead>
+                            <tbody id="excelPreviewBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeExcelModal()" data-i18n="btn.cancel">İptal</button>
+            <button class="btn btn-primary" id="excelImportBtn" onclick="importExcelData()" disabled>
+                <span class="material-icons">check</span> <span data-i18n="excelModal.import">İçe Aktar</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Projection Info Modal -->
+<div class="modal-overlay" id="projectionModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2><span class="material-icons" style="display: inline; font-size: 24px; vertical-align: middle; margin-right: 8px;">public</span><span data-i18n="projModal.title">Projeksiyon Bilgileri</span></h2>
+            <button onclick="closeProjectionModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label data-i18n="projModal.geometryName">Geometri Adı</label>
+                <input type="text" id="projGeometryName" readonly>
+            </div>
+            <table class="projection-table" id="projectionTable">
+                <thead>
+                    <tr>
+                        <th data-i18n="projModal.projection">Projeksiyon</th>
+                        <th data-i18n="projModal.wkt">WKT</th>
+                    </tr>
+                </thead>
+                <tbody id="projectionTableBody">
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeProjectionModal()" data-i18n="btn.close">Kapat</button>
+        </div>
+    </div>
+</div>
+
+<!-- Export Modal -->
+<div class="modal-overlay" id="exportModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2><span class="material-icons" style="display: inline; font-size: 24px; vertical-align: middle; margin-right: 8px;">download</span><span data-i18n="exportModal.title">Geometrileri Dışa Aktar</span></h2>
+            <button onclick="closeExportModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="export-info-box">
+                <span class="material-icons">info</span>
+                <span id="exportGeometryCount">0 <span data-i18n="exportModal.count">geometri dışa aktarılacak</span></span>
+            </div>
+            
+            <div class="form-group">
+                <label data-i18n="exportModal.targetProjection">Hedef Projeksiyon</label>
+                <select id="exportProjection">
+                    <option value="EPSG:4326">EPSG:4326 - WGS 84 (Enlem/Boylam)</option>
+                    <option value="EPSG:3857">EPSG:3857 - Web Mercator</option>
+                    <optgroup label="Türkiye Koordinat Sistemleri">
+                        <option value="SR-ORG:7839">TM 42 (Merkez Meridyen: 42°)</option>
+                        <option value="SR-ORG:7838">TM 39 (Merkez Meridyen: 39°)</option>
+                        <option value="SR-ORG:7837">TM 36 (Merkez Meridyen: 36°)</option>
+                        <option value="SR-ORG:7836">TM 33 (Merkez Meridyen: 33°)</option>
+                        <option value="SR-ORG:7833">TM 30 (Merkez Meridyen: 30°)</option>
+                        <option value="SR-ORG:7835">TM 27 (Merkez Meridyen: 27°)</option>
+                    </optgroup>
+                    <optgroup label="Diğer Sistemler">
+                        <option value="EPSG:2154">EPSG:2154 - Lambert 93</option>
+                        <option value="EPSG:32632">EPSG:32632 - UTM Zone 32N</option>
+                    </optgroup>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label data-i18n="exportModal.format">Export Formatı</label>
+                <div class="export-format-options">
+                    <label class="radio-card">
+                        <input type="radio" name="exportFormat" value="csv" checked>
+                        <div class="radio-card-content">
+                            <span class="material-icons">table_chart</span>
+                            <span data-i18n="exportModal.csv">CSV</span>
+                            <small data-i18n="exportModal.csvDesc">Excel uyumlu</small>
+                        </div>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="exportFormat" value="json">
+                        <div class="radio-card-content">
+                            <span class="material-icons">code</span>
+                            <span data-i18n="exportModal.json">JSON</span>
+                            <small data-i18n="exportModal.jsonDesc">Geliştirici dostu</small>
+                        </div>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="exportFormat" value="geojson">
+                        <div class="radio-card-content">
+                            <span class="material-icons">public</span>
+                            <span data-i18n="exportModal.geojson">GeoJSON</span>
+                            <small data-i18n="exportModal.geojsonDesc">GIS standart</small>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="exportIncludeStyles" checked>
+                    <span data-i18n="exportModal.includeStyles">Stil bilgilerini dahil et</span>
+                </label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeExportModal()" data-i18n="btn.cancel">İptal</button>
+            <button class="btn btn-primary" onclick="exportGeometries()" id="doExportBtn">
+                <span class="material-icons">download</span> <span data-i18n="exportModal.export">Dışa Aktar</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Confirm Dialog -->
+<div class="confirm-overlay" id="confirmDialog">
+    <div class="confirm-dialog">
+        <div class="confirm-icon" id="confirmIcon">
+            <span class="material-icons">help_outline</span>
+        </div>
+        <div class="confirm-content">
+            <h3 id="confirmTitle" data-i18n="confirm.title">Onay</h3>
+            <p id="confirmMessage">Emin misiniz?</p>
+        </div>
+        <div class="confirm-buttons">
+            <button class="btn btn-secondary" id="confirmCancelBtn" onclick="closeConfirmDialog(false)">
+                <span class="material-icons">close</span>
+                <span data-i18n="btn.cancel">İptal</span>
+            </button>
+            <button class="btn btn-danger" id="confirmOkBtn" onclick="closeConfirmDialog(true)">
+                <span class="material-icons">check</span>
+                <span data-i18n="btn.confirm">Onayla</span>
+            </button>
+        </div>
+    </div>
+</div>

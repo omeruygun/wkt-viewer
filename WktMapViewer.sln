@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11415.280 d18.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WktMapViewer", "WktMapViewer\WktMapViewer.csproj", "{20CBAC6E-0AE1-9FA0-8E2F-97F9486662D0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{20CBAC6E-0AE1-9FA0-8E2F-97F9486662D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20CBAC6E-0AE1-9FA0-8E2F-97F9486662D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20CBAC6E-0AE1-9FA0-8E2F-97F9486662D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20CBAC6E-0AE1-9FA0-8E2F-97F9486662D0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A9DD5664-1CC6-4138-A755-57473718B9BD}
+	EndGlobalSection
+EndGlobal

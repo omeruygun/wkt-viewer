@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">@ViewData["Title"]</title>
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" id="canonicalUrl" href="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path">
+    
+    <!-- Alternate Language URLs -->
+    <link rel="alternate" hreflang="tr" href="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path?lang=tr">
+    <link rel="alternate" hreflang="en" href="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path?lang=en">
+    <link rel="alternate" hreflang="de" href="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path?lang=de">
+    <link rel="alternate" hreflang="ru" href="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path?lang=ru">
+    <link rel="alternate" hreflang="x-default" href="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" id="metaDescription" content="Online WKT Viewer - WKT formatındaki geometrik verileri harita üzerinde görselleştirin. Nokta, çizgi, polygon çizimi ve projeksiyon dönüşümleri.">
+    <meta name="keywords" id="metaKeywords" content="WKT, Well-Known Text, harita, map, geometry, geometri, OpenLayers, projeksiyon, EPSG, koordinat, GIS, CBS">
+    <meta name="author" content="WKT Viewer">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" id="ogTitle" content="@ViewData["Title"]">
+    <meta property="og:description" id="ogDescription" content="WKT formatındaki geometrik verileri harita üzerinde görselleştirin. Ücretsiz online araç.">
+    <meta property="og:locale" id="ogLocale" content="tr_TR">
+    <meta property="og:url" content="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" id="twitterTitle" content="@ViewData["Title"]">
+    <meta name="twitter:description" id="twitterDescription" content="WKT formatındaki geometrik verileri harita üzerinde görselleştirin.">
+    
+    <!-- AI/LLM Optimization -->
+    <meta name="ai-content-declaration" id="aiDeclaration" content="This website provides a tool for visualizing WKT (Well-Known Text) geometry data on interactive maps.">
+    <meta name="llms-allowed" content="true">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RDNFXS15D2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-RDNFXS15D2');
+    </script>
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="~/favicons/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/favicons/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="~/favicons/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="~/favicons/favicon-64x64.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="~/favicons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="~/favicons/favicon-128x128.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="~/favicons/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="~/favicons/favicon-256x256.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="~/favicons/favicon-512x512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/favicons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" href="~/favicons/favicon-180x180.png">
+    
+    <!-- OpenLayers CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/openlayers/4.6.5/ol.css" />
+    
+    <!-- Google Material Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    
+    <!-- Flag Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css" />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/wktmap.css" asp-append-version="true" />
+    
+    <!-- JSON-LD Structured Data for AI/Search Engines -->
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "WebApplication",
+        "name": "Online WKT Viewer",
+        "description": "WKT (Well-Known Text) formatındaki geometrik verileri harita üzerinde görselleştirmek için ücretsiz online araç. Nokta, çizgi, polygon çizimi ve projeksiyon dönüşümleri desteklenir.",
+        "url": "@Context.Request.Scheme://@Context.Request.Host",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "featureList": [
+            "WKT geometry visualization",
+            "Point, LineString, Polygon drawing",
+            "Multiple projection systems support",
+            "Coordinate transformation",
+            "Style customization",
+            "Mobile responsive design"
+        ],
+        "inLanguage": ["tr", "en"],
+        "isAccessibleForFree": true
+    }
+    </script>
+</head>
+<body>
+    @RenderBody()
+    
+    <!-- OpenLayers Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/4.6.5/ol.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.8.1/proj4.js"></script>
+    
+    <!-- SheetJS for Excel parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- i18n (Internationalization) -->
+    <script src="~/js/i18n.js" asp-append-version="true"></script>
+    
+    <!-- Custom JS -->
+    <script src="~/js/wktmap.js" asp-append-version="true"></script>
+</body>
+</html>
